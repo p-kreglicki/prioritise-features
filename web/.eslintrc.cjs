@@ -7,38 +7,19 @@ module.exports = {
     sourceType: 'module',
     ecmaFeatures: { jsx: true }
   },
-  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'import'],
+  plugins: ['@typescript-eslint', 'react', 'react-hooks'],
   extends: [
-    'next/core-web-vitals',
+    'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:import/recommended',
-    'plugin:import/typescript',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
     'prettier'
   ],
-  settings: {
-    'import/resolver': {
-      typescript: {
-        project: __dirname
-      }
-    }
-  },
   rules: {
     'react/react-in-jsx-scope': 'off',
-    'import/order': [
-      'warn',
-      {
-        groups: [
-          'builtin',
-          'external',
-          'internal',
-          ['parent', 'sibling', 'index'],
-          'object',
-          'type'
-        ],
-        'newlines-between': 'always',
-        alphabetize: { order: 'asc', caseInsensitive: true }
-      }
-    ]
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    'react/no-unescaped-entities': 'warn'
   },
   ignorePatterns: ['node_modules/', '.next/', 'dist/', 'out/']
 };

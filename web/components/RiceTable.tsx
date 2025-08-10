@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, memo } from "react";
 import {
   DEFAULT_RICE_SCALES,
   computeRiceScore,
@@ -10,7 +10,7 @@ import {
   type ConfidenceLabel,
   type EffortSize
 } from "@/lib/rice";
-import { saveState, loadState, clearState, createDebounced } from "@/lib/storage";
+import { saveState, loadState, createDebounced } from "@/lib/storage";
 
 function generateId(): string {
   return `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
@@ -20,7 +20,7 @@ const impactOptions: ImpactLabel[] = ["Massive", "High", "Medium", "Low", "Minim
 const confidenceOptions: ConfidenceLabel[] = ["100%", "80%", "50%"];
 const effortOptions: EffortSize[] = ["XS", "S", "M", "L", "XL"];
 
-export default function RiceTable({
+const RiceTable = memo(function RiceTable({
   features: featuresProp,
   onChangeFeatures
 }: {
@@ -63,6 +63,13 @@ export default function RiceTable({
     applyUpdate((prev) => prev.concat(newFeature));
   }, [applyUpdate]);
 
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, action: () => void) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      action();
+    }
+  }, []);
+
   const deleteFeature = useCallback(
     (id: string) => {
       applyUpdate((prev) => prev.filter((f) => f.id !== id));
@@ -98,7 +105,7 @@ export default function RiceTable({
     return undefined;
   }, [features, debouncedSave, isControlled]);
 
-  const renderRow = (f: Feature) => {
+  const renderRow = useCallback((f: Feature) => {
     const score = computeRiceScore(f, DEFAULT_RICE_SCALES);
     const scoreDisplay = score == null ? "" : (Math.round(score * 100) / 100).toFixed(2);
     const invalidReach = f.reach !== undefined && (!Number.isFinite(f.reach) || (f.reach as number) < 0);
@@ -112,7 +119,7 @@ export default function RiceTable({
     const confHelpId = `${f.id}-conf-help`;
     const effortHelpId = `${f.id}-effort-help`;
     return (
-      <tr key={f.id}>
+      <tr key={f.id} role="row">
         <td style={{ padding: 8 }}>
           <input
             aria-label="Feature name"
@@ -217,55 +224,72 @@ export default function RiceTable({
         </td>
         <td style={{ padding: 8, textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{scoreDisplay}</td>
         <td style={{ padding: 8, textAlign: "center" }}>
-          <button onClick={() => deleteFeature(f.id)} aria-label={`Delete ${f.name || "feature"}`}>
+          <button 
+            onClick={() => deleteFeature(f.id)} 
+            onKeyDown={(e) => handleKeyDown(e, () => deleteFeature(f.id))}
+            aria-label={`Delete feature: ${f.name || "unnamed"}`}
+            title={`Delete ${f.name || "feature"}`}
+            tabIndex={0}
+          >
             Delete
           </button>
         </td>
       </tr>
     );
-  };
+  }, [updateFeature, deleteFeature, handleKeyDown]);
 
   return (
     <section aria-label="RICE table" style={{ marginTop: 16 }}>
-      <div style={{ marginBottom: 8, display: "flex", gap: 8 }}>
-        <button onClick={addFeature}>Add feature</button>
-        <div style={{ color: "#666" }}>Auto-sorted by RICE score</div>
+      <div style={{ marginBottom: 8, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+        <button 
+          onClick={addFeature}
+          onKeyDown={(e) => handleKeyDown(e, addFeature)}
+          aria-label="Add new feature to the table"
+          tabIndex={0}
+        >
+          Add feature
+        </button>
+        <div style={{ color: "#666", fontSize: "14px" }}>Auto-sorted by RICE score</div>
       </div>
-      <div style={{ marginBottom: 8, color: "#555", lineHeight: 1.4 }}>
+      <div style={{ marginBottom: 8, color: "#555", lineHeight: 1.4, fontSize: "14px" }}>
         <div>
           <strong>Formula:</strong> (Reach × Impact × Confidence) ÷ Effort
         </div>
-        <div>
+        <div style={{ wordBreak: "break-word" }}>
           <strong>Reach</strong>: customers per quarter. <strong>Impact</strong>: Massive=3, High=2,
           Medium=1, Low=0.5, Minimal=0.25. <strong>Confidence</strong>: 100%=1.0, 80%=0.8, 50%=0.5.
           <strong> Effort</strong>: XS=0.5, S=1, M=2, L=4, XL=8.
         </div>
       </div>
-      <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <div style={{ overflowX: "auto", border: "1px solid #ddd", borderRadius: "4px" }}>
+        <table 
+          style={{ width: "100%", borderCollapse: "collapse", minWidth: "800px" }}
+          role="table"
+          aria-label="RICE prioritization features table"
+        >
           <thead>
-            <tr>
-              <th style={{ textAlign: "left", padding: 8 }}>Feature</th>
-              <th style={{ textAlign: "right", padding: 8 }} title="Reach: customers per quarter">
+            <tr role="row">
+              <th style={{ textAlign: "left", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }}>Feature</th>
+              <th style={{ textAlign: "right", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }} title="Reach: customers per quarter">
                 Reach / quarter
               </th>
-              <th style={{ textAlign: "right", padding: 8 }} title="Impact: Massive=3, High=2, Medium=1, Low=0.5, Minimal=0.25">
+              <th style={{ textAlign: "right", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }} title="Impact: Massive=3, High=2, Medium=1, Low=0.5, Minimal=0.25">
                 Impact
               </th>
-              <th style={{ textAlign: "right", padding: 8 }} title="Confidence: 100%=1.0, 80%=0.8, 50%=0.5">
+              <th style={{ textAlign: "right", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }} title="Confidence: 100%=1.0, 80%=0.8, 50%=0.5">
                 Confidence
               </th>
-              <th style={{ textAlign: "right", padding: 8 }} title="Effort: XS=0.5, S=1, M=2, L=4, XL=8">
+              <th style={{ textAlign: "right", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }} title="Effort: XS=0.5, S=1, M=2, L=4, XL=8">
                 Effort
               </th>
-              <th style={{ textAlign: "right", padding: 8 }}>Score</th>
-              <th style={{ textAlign: "center", padding: 8 }}>Actions</th>
+              <th style={{ textAlign: "right", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }}>Score</th>
+              <th style={{ textAlign: "center", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {sortedFeatures.length === 0 ? (
-              <tr>
-                <td colSpan={7} style={{ padding: 12, color: "#555" }}>
+              <tr role="row">
+                <td colSpan={7} style={{ padding: 12, color: "#555", textAlign: "center" }}>
                   No features yet. Click "Add feature" to get started.
                 </td>
               </tr>
@@ -277,6 +301,8 @@ export default function RiceTable({
       </div>
     </section>
   );
-}
+});
+
+export default RiceTable;
 
 

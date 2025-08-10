@@ -1,4 +1,4 @@
-import { saveState, loadState, clearState, STORAGE_KEY } from './storage';
+import { saveState, loadState, clearState } from './storage';
 
 function mockLocalStorage() {
   const store: Record<string, string> = {};

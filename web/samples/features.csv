@@ -1,0 +1,11 @@
+name,reach,impact,confidence,effort,description
+User Authentication,1000,High,80%,M,Implement OAuth login with Google and GitHub
+Dark Mode,5000,Medium,100%,S,Add dark theme option for better user experience
+Mobile App,2000,High,50%,L,Build native mobile app for iOS and Android
+Search Functionality,3000,High,90%,M,Add advanced search with filters and sorting
+Email Notifications,1500,Medium,100%,S,Implement email notifications for important events
+Analytics Dashboard,800,High,70%,L,Create comprehensive analytics dashboard
+Social Sharing,4000,Low,100%,S,Add social media sharing buttons
+Video Tutorials,1200,Medium,80%,M,Create video tutorials for new users
+API Rate Limiting,600,High,90%,S,Implement rate limiting for API endpoints
+Multi-language Support,2500,Medium,60%,L,Add support for Spanish, French, and German

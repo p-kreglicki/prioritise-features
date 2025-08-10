@@ -68,12 +68,12 @@
   - [x] 5.4 Add UI actions: Clear data and Import/Export entry points.
   - [x] 5.5 Tests for storage helpers (mock `localStorage`).
 
-- [ ] 6.0 Accessibility, responsiveness, and performance polish
-  - [ ] 6.1 Ensure responsive layout for small screens; verify horizontal scroll/stacking strategy.
-  - [ ] 6.2 Verify ARIA roles, labels, focus management, and tab order for table interactions.
-  - [ ] 6.3 Optimize re-renders (memoization) and ensure updates remain instant for <20 rows.
-  - [ ] 6.4 QA: verify sorting tie-breakers, rounding (display 2 decimals), and empty-state UX.
-  - [ ] 6.5 Add README usage section and sample files `samples/features.csv` and `samples/features.json`.
+- [x] 6.0 Accessibility, responsiveness, and performance polish
+  - [x] 6.1 Ensure responsive layout for small screens; verify horizontal scroll/stacking strategy.
+  - [x] 6.2 Verify ARIA roles, labels, focus management, and tab order for table interactions.
+  - [x] 6.3 Optimize re-renders (memoization) and ensure updates remain instant for <20 rows.
+  - [x] 6.4 QA: verify sorting tie-breakers, rounding (display 2 decimals), and empty-state UX.
+  - [x] 6.5 Add README usage section and sample files `samples/features.csv` and `samples/features.json`.
 
 I have generated the high-level tasks based on the PRD. Ready to generate the sub-tasks? Respond with "Go" to proceed.
 

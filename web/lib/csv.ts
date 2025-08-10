@@ -36,7 +36,7 @@ function parseCsv(text: string): string[][] {
       return value;
     }
     // unquoted
-    let start = i;
+    const start = i;
     while (i < n && text[i] !== "," && text[i] !== "\n" && text[i] !== "\r") i++;
     return text.slice(start, i).trim();
   };
