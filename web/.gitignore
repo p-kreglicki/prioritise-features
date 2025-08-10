@@ -1,0 +1,11 @@
+.next/
+node_modules/
+.npm-cache/
+coverage/
+dist/
+out/
+.DS_Store
+.env*
+.next-dev.log
+
+
