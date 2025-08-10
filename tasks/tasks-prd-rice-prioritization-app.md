@@ -44,21 +44,22 @@
   - [x] 2.6 Unit tests in `lib/rice.test.ts` covering typical, boundary, and invalid cases.
 
 - [ ] 3.0 Table UI
-  - [ ] 3.1 Build base layout in `app/page.tsx` with heading and `RiceTable` mount.
-  - [ ] 3.2 Implement `components/RiceTable.tsx` columns: Feature, Reach/quarter, Impact, Confidence, Effort, Score, Actions.
-  - [ ] 3.3 Implement add row, inline edit (controlled inputs), and delete with confirm.
-  - [ ] 3.4 Recalculate scores on change and auto-sort using `compareByRice`.
+  - [x] 3.1 Build base layout in `app/page.tsx` with heading and `RiceTable` mount.
+  - [x] 3.2 Implement `components/RiceTable.tsx` columns: Feature, Reach/quarter, Impact, Confidence, Effort, Score, Actions.
+  - [x] 3.5 Add tooltips/explanations for R/I/C/E; include scale legends.
+  - [x] 3.3 Implement add row, inline edit (controlled inputs), and delete with confirm.
+  - [x] 3.4 Recalculate scores on change and auto-sort using `compareByRice`.
   - [ ] 3.5 Add tooltips/explanations for R/I/C/E; include scale legends.
-  - [ ] 3.6 Inline validation messages and disable score display for incomplete rows.
-  - [ ] 3.7 Keyboard navigation and accessibility (labels, roles, focus order).
+  - [x] 3.6 Inline validation messages and disable score display for incomplete rows.
+  - [x] 3.7 Keyboard navigation and accessibility (labels, roles, focus order).
   - [ ] 3.8 Component tests `components/RiceTable.test.tsx` for CRUD and live updates.
 
 - [ ] 4.0 Import/Export
-  - [ ] 4.1 Implement `lib/csv.ts` to parse CSV → features and stringify features → CSV; support JSON import/export.
-  - [ ] 4.2 Implement label mapping (case-insensitive) for impact, confidence, effort; validate and report errors.
-  - [ ] 4.3 Build `components/ImportDialog.tsx` for upload, preview, and apply (replace or append) with validation summary.
-  - [ ] 4.4 Build `components/ExportMenu.tsx` for CSV/JSON download and copy-to-clipboard table.
-  - [ ] 4.5 Unit tests `lib/csv.test.ts` for parsing, mapping, and error handling.
+  - [x] 4.1 Implement `lib/csv.ts` to parse CSV → features and stringify features → CSV; support JSON import/export.
+  - [x] 4.2 Implement label mapping (case-insensitive) for impact, confidence, effort; validate and report errors.
+  - [x] 4.3 Build `components/ImportDialog.tsx` for upload, preview, and apply (replace or append) with validation summary.
+  - [x] 4.4 Build `components/ExportMenu.tsx` for CSV/JSON download and copy-to-clipboard table.
+  - [x] 4.5 Unit tests `lib/csv.test.ts` for parsing, mapping, and error handling.
 
 - [ ] 5.0 Persistence
   - [ ] 5.1 Implement `lib/storage.ts` with autosave to `localStorage` and schema versioning.

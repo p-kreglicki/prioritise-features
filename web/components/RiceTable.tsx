@@ -1,0 +1,240 @@
+"use client";
+
+import { useMemo, useState, useCallback } from "react";
+import {
+  DEFAULT_RICE_SCALES,
+  computeRiceScore,
+  compareByRice,
+  type Feature,
+  type ImpactLabel,
+  type ConfidenceLabel,
+  type EffortSize
+} from "@/lib/rice";
+
+function generateId(): string {
+  return `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+const impactOptions: ImpactLabel[] = ["Massive", "High", "Medium", "Low", "Minimal"];
+const confidenceOptions: ConfidenceLabel[] = ["100%", "80%", "50%"];
+const effortOptions: EffortSize[] = ["XS", "S", "M", "L", "XL"];
+
+export default function RiceTable() {
+  const [features, setFeatures] = useState<Feature[]>([]);
+
+  const sortedFeatures = useMemo(() => {
+    return features.slice().sort((a, b) => compareByRice(a, b));
+  }, [features]);
+
+  const addFeature = useCallback(() => {
+    const nowIso = new Date().toISOString();
+    const newFeature: Feature = {
+      id: generateId(),
+      name: "",
+      description: "",
+      createdAtIso: nowIso,
+      updatedAtIso: nowIso
+    };
+    setFeatures((prev) => prev.concat(newFeature));
+  }, []);
+
+  const deleteFeature = useCallback((id: string) => {
+    setFeatures((prev) => prev.filter((f) => f.id !== id));
+  }, []);
+
+  const updateFeature = useCallback(<K extends keyof Feature>(id: string, key: K, value: Feature[K]) => {
+    setFeatures((prev) =>
+      prev.map((f) =>
+        f.id === id
+          ? {
+              ...f,
+              [key]: value,
+              updatedAtIso: new Date().toISOString()
+            }
+          : f
+      )
+    );
+  }, []);
+
+  const renderRow = (f: Feature) => {
+    const score = computeRiceScore(f, DEFAULT_RICE_SCALES);
+    const scoreDisplay = score == null ? "" : (Math.round(score * 100) / 100).toFixed(2);
+    const invalidReach = f.reach !== undefined && (!Number.isFinite(f.reach) || (f.reach as number) < 0);
+    const missingReach = f.reach === undefined;
+    const missingImpact = !f.impact;
+    const missingConfidence = !f.confidence;
+    const missingEffort = !f.effort;
+
+    const reachHelpId = `${f.id}-reach-help`;
+    const impactHelpId = `${f.id}-impact-help`;
+    const confHelpId = `${f.id}-conf-help`;
+    const effortHelpId = `${f.id}-effort-help`;
+    return (
+      <tr key={f.id}>
+        <td style={{ padding: 8 }}>
+          <input
+            aria-label="Feature name"
+            value={f.name}
+            onChange={(e) => updateFeature(f.id, "name", e.target.value)}
+            style={{ width: "100%" }}
+            placeholder="Feature name"
+          />
+        </td>
+        <td style={{ padding: 8, textAlign: "right" }} title="Reach: customers per quarter">
+          <input
+            aria-label="Reach per quarter"
+            type="number"
+            min={0}
+            step={1}
+            value={f.reach ?? ""}
+            onChange={(e) => {
+              const v = e.target.value;
+              const num = v === "" ? undefined : Number(v);
+              updateFeature(f.id, "reach", (Number.isFinite(num as number) ? (num as number) : undefined) as any);
+            }}
+            aria-invalid={invalidReach ? true : undefined}
+            aria-describedby={invalidReach || missingReach ? reachHelpId : undefined}
+            style={{
+              width: 120,
+              textAlign: "right",
+              borderColor: invalidReach ? "tomato" : undefined
+            }}
+            placeholder="0"
+          />
+          {(invalidReach || missingReach) && (
+            <div id={reachHelpId} style={{ color: "tomato", fontSize: 12, marginTop: 4 }}>
+              {invalidReach ? "Reach must be a non-negative number" : "Reach is required"}
+            </div>
+          )}
+        </td>
+        <td style={{ padding: 8, textAlign: "right" }} title="Impact scale mapping">
+          <select
+            aria-label="Impact"
+            value={(f.impact as string) ?? ""}
+            onChange={(e) => updateFeature(f.id, "impact", e.target.value as ImpactLabel)}
+            style={{ width: 140 }}
+            aria-invalid={missingImpact ? true : undefined}
+            aria-describedby={missingImpact ? impactHelpId : undefined}
+          >
+            <option value="">Select</option>
+            {impactOptions.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+          {missingImpact && (
+            <div id={impactHelpId} style={{ color: "tomato", fontSize: 12, marginTop: 4 }}>
+              Impact is required
+            </div>
+          )}
+        </td>
+        <td style={{ padding: 8, textAlign: "right" }} title="Confidence mapping">
+          <select
+            aria-label="Confidence"
+            value={(f.confidence as string) ?? ""}
+            onChange={(e) => updateFeature(f.id, "confidence", e.target.value as ConfidenceLabel)}
+            style={{ width: 120 }}
+            aria-invalid={missingConfidence ? true : undefined}
+            aria-describedby={missingConfidence ? confHelpId : undefined}
+          >
+            <option value="">Select</option>
+            {confidenceOptions.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+          {missingConfidence && (
+            <div id={confHelpId} style={{ color: "tomato", fontSize: 12, marginTop: 4 }}>
+              Confidence is required
+            </div>
+          )}
+        </td>
+        <td style={{ padding: 8, textAlign: "right" }} title="Effort T-shirt sizes mapping">
+          <select
+            aria-label="Effort"
+            value={(f.effort as string) ?? ""}
+            onChange={(e) => updateFeature(f.id, "effort", e.target.value as EffortSize)}
+            style={{ width: 100 }}
+            aria-invalid={missingEffort ? true : undefined}
+            aria-describedby={missingEffort ? effortHelpId : undefined}
+          >
+            <option value="">Select</option>
+            {effortOptions.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+          {missingEffort && (
+            <div id={effortHelpId} style={{ color: "tomato", fontSize: 12, marginTop: 4 }}>
+              Effort is required
+            </div>
+          )}
+        </td>
+        <td style={{ padding: 8, textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{scoreDisplay}</td>
+        <td style={{ padding: 8, textAlign: "center" }}>
+          <button onClick={() => deleteFeature(f.id)} aria-label={`Delete ${f.name || "feature"}`}>
+            Delete
+          </button>
+        </td>
+      </tr>
+    );
+  };
+
+  return (
+    <section aria-label="RICE table" style={{ marginTop: 16 }}>
+      <div style={{ marginBottom: 8, display: "flex", gap: 8 }}>
+        <button onClick={addFeature}>Add feature</button>
+        <div style={{ color: "#666" }}>Auto-sorted by RICE score</div>
+      </div>
+      <div style={{ marginBottom: 8, color: "#555", lineHeight: 1.4 }}>
+        <div>
+          <strong>Formula:</strong> (Reach × Impact × Confidence) ÷ Effort
+        </div>
+        <div>
+          <strong>Reach</strong>: customers per quarter. <strong>Impact</strong>: Massive=3, High=2,
+          Medium=1, Low=0.5, Minimal=0.25. <strong>Confidence</strong>: 100%=1.0, 80%=0.8, 50%=0.5.
+          <strong> Effort</strong>: XS=0.5, S=1, M=2, L=4, XL=8.
+        </div>
+      </div>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr>
+              <th style={{ textAlign: "left", padding: 8 }}>Feature</th>
+              <th style={{ textAlign: "right", padding: 8 }} title="Reach: customers per quarter">
+                Reach / quarter
+              </th>
+              <th style={{ textAlign: "right", padding: 8 }} title="Impact: Massive=3, High=2, Medium=1, Low=0.5, Minimal=0.25">
+                Impact
+              </th>
+              <th style={{ textAlign: "right", padding: 8 }} title="Confidence: 100%=1.0, 80%=0.8, 50%=0.5">
+                Confidence
+              </th>
+              <th style={{ textAlign: "right", padding: 8 }} title="Effort: XS=0.5, S=1, M=2, L=4, XL=8">
+                Effort
+              </th>
+              <th style={{ textAlign: "right", padding: 8 }}>Score</th>
+              <th style={{ textAlign: "center", padding: 8 }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedFeatures.length === 0 ? (
+              <tr>
+                <td colSpan={7} style={{ padding: 12, color: "#555" }}>
+                  No features yet. Click "Add feature" to get started.
+                </td>
+              </tr>
+            ) : (
+              sortedFeatures.map((f) => renderRow(f))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+
