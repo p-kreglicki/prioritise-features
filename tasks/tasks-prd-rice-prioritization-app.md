@@ -26,7 +26,7 @@
 
 ## Tasks
 
-- [ ] 1.0 Project scaffold and tooling
+- [x] 1.0 Project scaffold and tooling
   - [x] 1.1 Initialize Next.js (App Router) with TypeScript: create `package.json`, `next.config.js`, `tsconfig.json`.
   - [x] 1.2 Configure ESLint + Prettier: add configs and `lint`/`format` scripts.
   - [x] 1.3 Set up Jest + Testing Library: `jest.config.ts`, `setupTests.ts`, add `test` script.
@@ -35,13 +35,13 @@
   - [x] 1.6 Add `app/page.tsx` placeholder with link to PRD and TODOs.
   - [x] 1.7 Verify `npm run dev` starts and renders the placeholder page.
 
-- [ ] 2.0 RICE domain logic
-  - [ ] 2.1 Define types in `lib/rice.ts`: `Feature`, `RiceScales`, and `PersistedState`.
-  - [ ] 2.2 Implement constants: Impact, Confidence, Effort (XS:0.5, S:1, M:2, L:4, XL:8).
-  - [ ] 2.3 Implement `computeRiceScore(feature)` using (Reach × Impact × Confidence) / Effort.
-  - [ ] 2.4 Implement `compareByRice(a,b)` with tie-breakers: lowest Effort, then highest Impact.
-  - [ ] 2.5 Implement validation helpers: non-negative reach, allowed enums, effort != 0.
-  - [ ] 2.6 Unit tests in `lib/rice.test.ts` covering typical, boundary, and invalid cases.
+- [x] 2.0 RICE domain logic
+  - [x] 2.1 Define types in `lib/rice.ts`: `Feature`, `RiceScales`, and `PersistedState`.
+  - [x] 2.2 Implement constants: Impact, Confidence, Effort (XS:0.5, S:1, M:2, L:4, XL:8).
+  - [x] 2.3 Implement `computeRiceScore(feature)` using (Reach × Impact × Confidence) / Effort.
+  - [x] 2.4 Implement `compareByRice(a,b)` with tie-breakers: lowest Effort, then highest Impact.
+  - [x] 2.5 Implement validation helpers: non-negative reach, allowed enums, effort != 0.
+  - [x] 2.6 Unit tests in `lib/rice.test.ts` covering typical, boundary, and invalid cases.
 
 - [ ] 3.0 Table UI
   - [ ] 3.1 Build base layout in `app/page.tsx` with heading and `RiceTable` mount.
