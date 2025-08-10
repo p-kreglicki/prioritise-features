@@ -61,12 +61,12 @@
   - [x] 4.4 Build `components/ExportMenu.tsx` for CSV/JSON download and copy-to-clipboard table.
   - [x] 4.5 Unit tests `lib/csv.test.ts` for parsing, mapping, and error handling.
 
-- [ ] 5.0 Persistence
-  - [ ] 5.1 Implement `lib/storage.ts` with autosave to `localStorage` and schema versioning.
-  - [ ] 5.2 Restore state on load; handle incompatible versions (show reset option).
-  - [ ] 5.3 Debounce saves to avoid excessive writes; expose `saveState`/`loadState` helpers.
-  - [ ] 5.4 Add UI actions: Clear data and Import/Export entry points.
-  - [ ] 5.5 Tests for storage helpers (mock `localStorage`).
+- [x] 5.0 Persistence
+  - [x] 5.1 Implement `lib/storage.ts` with autosave to `localStorage` and schema versioning.
+  - [x] 5.2 Restore state on load; handle incompatible versions (show reset option).
+  - [x] 5.3 Debounce saves to avoid excessive writes; expose `saveState`/`loadState` helpers.
+  - [x] 5.4 Add UI actions: Clear data and Import/Export entry points.
+  - [x] 5.5 Tests for storage helpers (mock `localStorage`).
 
 - [ ] 6.0 Accessibility, responsiveness, and performance polish
   - [ ] 6.1 Ensure responsive layout for small screens; verify horizontal scroll/stacking strategy.

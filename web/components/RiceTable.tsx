@@ -10,6 +10,7 @@ import {
   type ConfidenceLabel,
   type EffortSize
 } from "@/lib/rice";
+import { saveState, loadState, clearState, createDebounced } from "@/lib/storage";
 
 function generateId(): string {
   return `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
@@ -19,12 +20,36 @@ const impactOptions: ImpactLabel[] = ["Massive", "High", "Medium", "Low", "Minim
 const confidenceOptions: ConfidenceLabel[] = ["100%", "80%", "50%"];
 const effortOptions: EffortSize[] = ["XS", "S", "M", "L", "XL"];
 
-export default function RiceTable() {
-  const [features, setFeatures] = useState<Feature[]>([]);
+export default function RiceTable({
+  features: featuresProp,
+  onChangeFeatures
+}: {
+  features?: Feature[];
+  onChangeFeatures?: (next: Feature[]) => void;
+} = {}) {
+  const isControlled = Array.isArray(featuresProp);
+  const [internalFeatures, setInternalFeatures] = useState<Feature[]>(() => {
+    if (isControlled) return [];
+    const loaded = loadState();
+    return loaded?.features ?? [];
+  });
+  const features = isControlled ? (featuresProp as Feature[]) : internalFeatures;
 
   const sortedFeatures = useMemo(() => {
     return features.slice().sort((a, b) => compareByRice(a, b));
   }, [features]);
+
+  const applyUpdate = useCallback(
+    (updater: (prev: Feature[]) => Feature[]) => {
+      if (isControlled && onChangeFeatures) {
+        const next = updater(features);
+        onChangeFeatures(next);
+      } else {
+        setInternalFeatures(updater);
+      }
+    },
+    [features, isControlled, onChangeFeatures]
+  );
 
   const addFeature = useCallback(() => {
     const nowIso = new Date().toISOString();
@@ -35,15 +60,18 @@ export default function RiceTable() {
       createdAtIso: nowIso,
       updatedAtIso: nowIso
     };
-    setFeatures((prev) => prev.concat(newFeature));
-  }, []);
+    applyUpdate((prev) => prev.concat(newFeature));
+  }, [applyUpdate]);
 
-  const deleteFeature = useCallback((id: string) => {
-    setFeatures((prev) => prev.filter((f) => f.id !== id));
-  }, []);
+  const deleteFeature = useCallback(
+    (id: string) => {
+      applyUpdate((prev) => prev.filter((f) => f.id !== id));
+    },
+    [applyUpdate]
+  );
 
   const updateFeature = useCallback(<K extends keyof Feature>(id: string, key: K, value: Feature[K]) => {
-    setFeatures((prev) =>
+    applyUpdate((prev) =>
       prev.map((f) =>
         f.id === id
           ? {
@@ -54,7 +82,21 @@ export default function RiceTable() {
           : f
       )
     );
-  }, []);
+  }, [applyUpdate]);
+
+  const debouncedSave = useMemo(() => {
+    if (isControlled) return null;
+    return createDebounced((next: Feature[]) => {
+      const state = { version: 1, features: next, lastSavedAtIso: new Date().toISOString() };
+      saveState(state);
+    }, 300);
+  }, [isControlled]);
+
+  // Persist on changes (uncontrolled only)
+  useMemo(() => {
+    if (!isControlled && debouncedSave) debouncedSave(features);
+    return undefined;
+  }, [features, debouncedSave, isControlled]);
 
   const renderRow = (f: Feature) => {
     const score = computeRiceScore(f, DEFAULT_RICE_SCALES);
