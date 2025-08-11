@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html, body {
   padding: 0;
   margin: 0;
@@ -5,42 +9,6 @@ html, body {
 
 * {
   box-sizing: border-box;
-}
-
-/* Basic button styling */
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.2s;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-button:active {
-  background-color: #004085;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  main {
-    padding: 12px !important;
-  }
-  
-  h1 {
-    font-size: 20px !important;
-  }
-  
-  button {
-    padding: 6px 12px;
-    font-size: 13px;
-  }
 }
 
 

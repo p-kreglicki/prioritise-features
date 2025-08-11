@@ -21,7 +21,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'warn',
     'react/no-unescaped-entities': 'warn'
   },
-  ignorePatterns: ['node_modules/', '.next/', 'dist/', 'out/']
+  ignorePatterns: ['node_modules/', '.next/', 'dist/', 'out/', '*.config.js', '*.config.cjs']
 };
 
 

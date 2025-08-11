@@ -120,16 +120,16 @@ const RiceTable = memo(function RiceTable({
     const effortHelpId = `${f.id}-effort-help`;
     return (
       <tr key={f.id} role="row">
-        <td style={{ padding: 8 }}>
+        <td className="p-2">
           <input
             aria-label="Feature name"
             value={f.name}
             onChange={(e) => updateFeature(f.id, "name", e.target.value)}
-            style={{ width: "100%" }}
+            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Feature name"
           />
         </td>
-        <td style={{ padding: 8, textAlign: "right" }} title="Reach: customers per quarter">
+        <td className="p-2 text-right" title="Reach: customers per quarter">
           <input
             aria-label="Reach per quarter"
             type="number"
@@ -143,25 +143,25 @@ const RiceTable = memo(function RiceTable({
             }}
             aria-invalid={invalidReach ? true : undefined}
             aria-describedby={invalidReach || missingReach ? reachHelpId : undefined}
-            style={{
-              width: 120,
-              textAlign: "right",
-              borderColor: invalidReach ? "tomato" : undefined
-            }}
+            className={`w-30 px-2 py-1 border rounded text-right focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              invalidReach ? 'border-red-500' : 'border-gray-300'
+            }`}
             placeholder="0"
           />
           {(invalidReach || missingReach) && (
-            <div id={reachHelpId} style={{ color: "tomato", fontSize: 12, marginTop: 4 }}>
+            <div id={reachHelpId} className="text-red-500 text-xs mt-1">
               {invalidReach ? "Reach must be a non-negative number" : "Reach is required"}
             </div>
           )}
         </td>
-        <td style={{ padding: 8, textAlign: "right" }} title="Impact scale mapping">
+        <td className="p-2 text-right" title="Impact scale mapping">
           <select
             aria-label="Impact"
             value={(f.impact as string) ?? ""}
             onChange={(e) => updateFeature(f.id, "impact", e.target.value as ImpactLabel)}
-            style={{ width: 140 }}
+            className={`w-36 px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              missingImpact ? 'border-red-500' : 'border-gray-300'
+            }`}
             aria-invalid={missingImpact ? true : undefined}
             aria-describedby={missingImpact ? impactHelpId : undefined}
           >
@@ -173,17 +173,19 @@ const RiceTable = memo(function RiceTable({
             ))}
           </select>
           {missingImpact && (
-            <div id={impactHelpId} style={{ color: "tomato", fontSize: 12, marginTop: 4 }}>
+            <div id={impactHelpId} className="text-red-500 text-xs mt-1">
               Impact is required
             </div>
           )}
         </td>
-        <td style={{ padding: 8, textAlign: "right" }} title="Confidence mapping">
+        <td className="p-2 text-right" title="Confidence mapping">
           <select
             aria-label="Confidence"
             value={(f.confidence as string) ?? ""}
             onChange={(e) => updateFeature(f.id, "confidence", e.target.value as ConfidenceLabel)}
-            style={{ width: 120 }}
+            className={`w-32 px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              missingConfidence ? 'border-red-500' : 'border-gray-300'
+            }`}
             aria-invalid={missingConfidence ? true : undefined}
             aria-describedby={missingConfidence ? confHelpId : undefined}
           >
@@ -195,17 +197,19 @@ const RiceTable = memo(function RiceTable({
             ))}
           </select>
           {missingConfidence && (
-            <div id={confHelpId} style={{ color: "tomato", fontSize: 12, marginTop: 4 }}>
+            <div id={confHelpId} className="text-red-500 text-xs mt-1">
               Confidence is required
             </div>
           )}
         </td>
-        <td style={{ padding: 8, textAlign: "right" }} title="Effort T-shirt sizes mapping">
+        <td className="p-2 text-right" title="Effort T-shirt sizes mapping">
           <select
             aria-label="Effort"
             value={(f.effort as string) ?? ""}
             onChange={(e) => updateFeature(f.id, "effort", e.target.value as EffortSize)}
-            style={{ width: 100 }}
+            className={`w-24 px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              missingEffort ? 'border-red-500' : 'border-gray-300'
+            }`}
             aria-invalid={missingEffort ? true : undefined}
             aria-describedby={missingEffort ? effortHelpId : undefined}
           >
@@ -217,19 +221,20 @@ const RiceTable = memo(function RiceTable({
             ))}
           </select>
           {missingEffort && (
-            <div id={effortHelpId} style={{ color: "tomato", fontSize: 12, marginTop: 4 }}>
+            <div id={effortHelpId} className="text-red-500 text-xs mt-1">
               Effort is required
             </div>
           )}
         </td>
-        <td style={{ padding: 8, textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{scoreDisplay}</td>
-        <td style={{ padding: 8, textAlign: "center" }}>
+        <td className="p-2 text-right tabular-nums">{scoreDisplay}</td>
+        <td className="p-2 text-center">
           <button 
             onClick={() => deleteFeature(f.id)} 
             onKeyDown={(e) => handleKeyDown(e, () => deleteFeature(f.id))}
             aria-label={`Delete feature: ${f.name || "unnamed"}`}
             title={`Delete ${f.name || "feature"}`}
             tabIndex={0}
+            className="bg-red-500 hover:bg-red-600 text-white border-none px-3 py-1 rounded cursor-pointer text-sm transition-colors"
           >
             Delete
           </button>
@@ -239,49 +244,49 @@ const RiceTable = memo(function RiceTable({
   }, [updateFeature, deleteFeature, handleKeyDown]);
 
   return (
-    <section aria-label="RICE table" style={{ marginTop: 16 }}>
-      <div style={{ marginBottom: 8, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-        <div style={{ color: "#666", fontSize: "14px" }}>Auto-sorted by RICE score</div>
+    <section aria-label="RICE table" className="mt-4">
+      <div className="mb-2 flex gap-2 flex-wrap items-center">
+        <div className="text-gray-600 text-sm">Auto-sorted by RICE score</div>
       </div>
-      <div style={{ marginBottom: 8, color: "#555", lineHeight: 1.4, fontSize: "14px" }}>
+      <div className="mb-2 text-gray-700 leading-relaxed text-sm">
         <div>
           <strong>Formula:</strong> (Reach × Impact × Confidence) ÷ Effort
         </div>
-        <div style={{ wordBreak: "break-word" }}>
+        <div className="break-words">
           <strong>Reach</strong>: customers per quarter. <strong>Impact</strong>: Massive=3, High=2,
           Medium=1, Low=0.5, Minimal=0.25. <strong>Confidence</strong>: 100%=1.0, 80%=0.8, 50%=0.5.
           <strong> Effort</strong>: XS=0.5, S=1, M=2, L=4, XL=8.
         </div>
       </div>
-      <div style={{ overflowX: "auto", border: "1px solid #ddd", borderRadius: "4px" }}>
+      <div className="overflow-x-auto border border-gray-300 rounded">
         <table 
-          style={{ width: "100%", borderCollapse: "collapse", minWidth: "800px" }}
+          className="w-full border-collapse min-w-[800px]"
           role="table"
           aria-label="RICE prioritization features table"
         >
           <thead>
             <tr role="row">
-              <th style={{ textAlign: "left", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }}>Feature</th>
-              <th style={{ textAlign: "right", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }} title="Reach: customers per quarter">
+              <th className="text-left p-2 bg-gray-100 border-b border-gray-300">Feature</th>
+              <th className="text-right p-2 bg-gray-100 border-b border-gray-300" title="Reach: customers per quarter">
                 Reach / quarter
               </th>
-              <th style={{ textAlign: "right", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }} title="Impact: Massive=3, High=2, Medium=1, Low=0.5, Minimal=0.25">
+              <th className="text-right p-2 bg-gray-100 border-b border-gray-300" title="Impact: Massive=3, High=2, Medium=1, Low=0.5, Minimal=0.25">
                 Impact
               </th>
-              <th style={{ textAlign: "right", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }} title="Confidence: 100%=1.0, 80%=0.8, 50%=0.5">
+              <th className="text-right p-2 bg-gray-100 border-b border-gray-300" title="Confidence: 100%=1.0, 80%=0.8, 50%=0.5">
                 Confidence
               </th>
-              <th style={{ textAlign: "right", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }} title="Effort: XS=0.5, S=1, M=2, L=4, XL=8">
+              <th className="text-right p-2 bg-gray-100 border-b border-gray-300" title="Effort: XS=0.5, S=1, M=2, L=4, XL=8">
                 Effort
               </th>
-              <th style={{ textAlign: "right", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }}>Score</th>
-              <th style={{ textAlign: "center", padding: 8, backgroundColor: "#f5f5f5", borderBottom: "1px solid #ddd" }}>Actions</th>
+              <th className="text-right p-2 bg-gray-100 border-b border-gray-300">Score</th>
+              <th className="text-center p-2 bg-gray-100 border-b border-gray-300">Actions</th>
             </tr>
           </thead>
           <tbody>
             {sortedFeatures.length === 0 ? (
               <tr role="row">
-                <td colSpan={7} style={{ padding: 12, color: "#555", textAlign: "center" }}>
+                <td colSpan={7} className="p-3 text-gray-600 text-center">
                   No features yet. Click "Add feature" to get started.
                 </td>
               </tr>
@@ -291,22 +296,13 @@ const RiceTable = memo(function RiceTable({
           </tbody>
         </table>
       </div>
-      <div style={{ marginTop: 16, display: "flex", justifyContent: "center" }}>
+      <div className="mt-4 flex justify-center">
         <button 
           onClick={addFeature}
           onKeyDown={(e) => handleKeyDown(e, addFeature)}
           aria-label="Add new feature to the table"
           tabIndex={0}
-          style={{ 
-            backgroundColor: "#28a745", 
-            color: "white", 
-            border: "none", 
-            padding: "12px 24px", 
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontSize: "16px",
-            fontWeight: "500"
-          }}
+          className="bg-green-500 hover:bg-green-600 text-white border-none px-6 py-3 rounded-md cursor-pointer text-base font-medium transition-colors"
         >
           + Add Feature
         </button>

@@ -3,17 +3,37 @@
 import RiceTable from "@/components/RiceTable";
 import ImportDialog from "@/components/ImportDialog";
 import ExportMenu from "@/components/ExportMenu";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Feature } from "@/lib/rice";
+
+function generateId(): string {
+  return `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
 export default function Page() {
   const [features, setFeatures] = useState<Feature[]>([]);
+
+  // Add a default feature row on startup if no features exist
+  useEffect(() => {
+    if (features.length === 0) {
+      const nowIso = new Date().toISOString();
+      const defaultFeature: Feature = {
+        id: generateId(),
+        name: "",
+        description: "",
+        createdAtIso: nowIso,
+        updatedAtIso: nowIso
+      };
+      setFeatures([defaultFeature]);
+    }
+  }, [features.length]);
   return (
-    <main style={{ padding: "16px", fontFamily: "ui-sans-serif, system-ui", maxWidth: "1200px", margin: "0 auto" }}>
-      <h1 style={{ fontSize: "24px", fontWeight: 600, marginBottom: "8px" }}>RICE Prioritization App</h1>
-      <p style={{ marginTop: "8px", marginBottom: "16px", color: "#666", fontSize: "14px" }}>
+    <main className="p-4 font-sans max-w-6xl mx-auto">
+      <h1 className="text-2xl font-semibold mb-2">RICE Prioritization App</h1>
+      <p className="mt-2 mb-4 text-gray-600 text-sm">
         Prioritize features using the RICE framework: (Reach × Impact × Confidence) ÷ Effort
       </p>
-      <div style={{ display: "flex", gap: "12px", alignItems: "center", marginTop: "8px", flexWrap: "wrap" }}>
+      <div className="flex gap-3 items-center mt-2 flex-wrap">
         <ImportDialog
           onApply={(imported, mode) => {
             setFeatures((prev) => (mode === "replace" ? imported : prev.concat(imported)));
@@ -22,14 +42,7 @@ export default function Page() {
         <ExportMenu features={features} />
         <button 
           onClick={() => setFeatures([])}
-          style={{ 
-            backgroundColor: "#dc3545", 
-            color: "white", 
-            border: "none", 
-            padding: "8px 16px", 
-            borderRadius: "4px",
-            cursor: "pointer"
-          }}
+          className="bg-red-500 hover:bg-red-600 text-white border-none px-4 py-2 rounded cursor-pointer transition-colors"
         >
           Clear data
         </button>
