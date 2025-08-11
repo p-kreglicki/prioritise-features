@@ -1,3 +1,5 @@
+"use client";
+
 import RiceTable from "@/components/RiceTable";
 import ImportDialog from "@/components/ImportDialog";
 import ExportMenu from "@/components/ExportMenu";
