@@ -241,14 +241,6 @@ const RiceTable = memo(function RiceTable({
   return (
     <section aria-label="RICE table" style={{ marginTop: 16 }}>
       <div style={{ marginBottom: 8, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-        <button 
-          onClick={addFeature}
-          onKeyDown={(e) => handleKeyDown(e, addFeature)}
-          aria-label="Add new feature to the table"
-          tabIndex={0}
-        >
-          Add feature
-        </button>
         <div style={{ color: "#666", fontSize: "14px" }}>Auto-sorted by RICE score</div>
       </div>
       <div style={{ marginBottom: 8, color: "#555", lineHeight: 1.4, fontSize: "14px" }}>
@@ -298,6 +290,26 @@ const RiceTable = memo(function RiceTable({
             )}
           </tbody>
         </table>
+      </div>
+      <div style={{ marginTop: 16, display: "flex", justifyContent: "center" }}>
+        <button 
+          onClick={addFeature}
+          onKeyDown={(e) => handleKeyDown(e, addFeature)}
+          aria-label="Add new feature to the table"
+          tabIndex={0}
+          style={{ 
+            backgroundColor: "#28a745", 
+            color: "white", 
+            border: "none", 
+            padding: "12px 24px", 
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontSize: "16px",
+            fontWeight: "500"
+          }}
+        >
+          + Add Feature
+        </button>
       </div>
     </section>
   );
