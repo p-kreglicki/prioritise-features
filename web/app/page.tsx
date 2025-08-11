@@ -1,5 +1,8 @@
 "use client";
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { Container, Typography, Box, Button } from '@mui/material';
 import RiceTable from "@/components/RiceTable";
 import ImportDialog from "@/components/ImportDialog";
 import ExportMenu from "@/components/ExportMenu";
@@ -9,6 +12,17 @@ import type { Feature } from "@/lib/rice";
 function generateId(): string {
   return `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 }
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+    },
+    secondary: {
+      main: '#dc004e',
+    },
+  },
+});
 
 export default function Page() {
   const [features, setFeatures] = useState<Feature[]>([]);
@@ -27,28 +41,35 @@ export default function Page() {
       setFeatures([defaultFeature]);
     }
   }, [features.length]);
+
   return (
-    <main className="p-4 font-sans max-w-6xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-2">RICE Prioritization App</h1>
-      <p className="mt-2 mb-4 text-gray-600 text-sm">
-        Prioritize features using the RICE framework: (Reach × Impact × Confidence) ÷ Effort
-      </p>
-      <div className="flex gap-3 items-center mt-2 flex-wrap">
-        <ImportDialog
-          onApply={(imported, mode) => {
-            setFeatures((prev) => (mode === "replace" ? imported : prev.concat(imported)));
-          }}
-        />
-        <ExportMenu features={features} />
-        <button 
-          onClick={() => setFeatures([])}
-          className="bg-red-500 hover:bg-red-600 text-white border-none px-4 py-2 rounded cursor-pointer transition-colors"
-        >
-          Clear data
-        </button>
-      </div>
-      <RiceTable features={features} onChangeFeatures={setFeatures} />
-    </main>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          RICE Prioritization App
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+          Prioritize features using the RICE framework: (Reach × Impact × Confidence) ÷ Effort
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 3, flexWrap: 'wrap' }}>
+          <ImportDialog
+            onApply={(imported, mode) => {
+              setFeatures((prev) => (mode === "replace" ? imported : prev.concat(imported)));
+            }}
+          />
+          <ExportMenu features={features} />
+          <Button 
+            variant="contained" 
+            color="error"
+            onClick={() => setFeatures([])}
+          >
+            Clear data
+          </Button>
+        </Box>
+        <RiceTable features={features} onChangeFeatures={setFeatures} />
+      </Container>
+    </ThemeProvider>
   );
 }
 

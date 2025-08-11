@@ -2,6 +2,25 @@
 
 import { useMemo, useState, useCallback, memo } from "react";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  Typography,
+  Box,
+  IconButton,
+  Tooltip
+} from '@mui/material';
+import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import {
   DEFAULT_RICE_SCALES,
   computeRiceScore,
   compareByRice,
@@ -114,200 +133,187 @@ const RiceTable = memo(function RiceTable({
     const missingConfidence = !f.confidence;
     const missingEffort = !f.effort;
 
-    const reachHelpId = `${f.id}-reach-help`;
-    const impactHelpId = `${f.id}-impact-help`;
-    const confHelpId = `${f.id}-conf-help`;
-    const effortHelpId = `${f.id}-effort-help`;
+
     return (
-      <tr key={f.id} role="row">
-        <td className="p-2">
-          <input
+      <TableRow key={f.id}>
+        <TableCell>
+          <TextField
             aria-label="Feature name"
             value={f.name}
             onChange={(e) => updateFeature(f.id, "name", e.target.value)}
-            className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Feature name"
+            size="small"
+            fullWidth
+            variant="outlined"
           />
-        </td>
-        <td className="p-2 text-right" title="Reach: customers per quarter">
-          <input
+        </TableCell>
+        <TableCell align="right">
+          <TextField
             aria-label="Reach per quarter"
             type="number"
-            min={0}
-            step={1}
+            inputProps={{ min: 0, step: 1 }}
             value={f.reach ?? ""}
             onChange={(e) => {
               const v = e.target.value;
               const num = v === "" ? undefined : Number(v);
               updateFeature(f.id, "reach", (Number.isFinite(num as number) ? (num as number) : undefined) as any);
             }}
-            aria-invalid={invalidReach ? true : undefined}
-            aria-describedby={invalidReach || missingReach ? reachHelpId : undefined}
-            className={`w-30 px-2 py-1 border rounded text-right focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              invalidReach ? 'border-red-500' : 'border-gray-300'
-            }`}
-            placeholder="0"
+            error={invalidReach}
+            helperText={invalidReach ? "Reach must be a non-negative number" : missingReach ? "Reach is required" : ""}
+            size="small"
+            sx={{ width: 120 }}
+            variant="outlined"
           />
-          {(invalidReach || missingReach) && (
-            <div id={reachHelpId} className="text-red-500 text-xs mt-1">
-              {invalidReach ? "Reach must be a non-negative number" : "Reach is required"}
-            </div>
-          )}
-        </td>
-        <td className="p-2 text-right" title="Impact scale mapping">
-          <select
-            aria-label="Impact"
-            value={(f.impact as string) ?? ""}
-            onChange={(e) => updateFeature(f.id, "impact", e.target.value as ImpactLabel)}
-            className={`w-36 px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              missingImpact ? 'border-red-500' : 'border-gray-300'
-            }`}
-            aria-invalid={missingImpact ? true : undefined}
-            aria-describedby={missingImpact ? impactHelpId : undefined}
-          >
-            <option value="">Select</option>
-            {impactOptions.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-          {missingImpact && (
-            <div id={impactHelpId} className="text-red-500 text-xs mt-1">
-              Impact is required
-            </div>
-          )}
-        </td>
-        <td className="p-2 text-right" title="Confidence mapping">
-          <select
-            aria-label="Confidence"
-            value={(f.confidence as string) ?? ""}
-            onChange={(e) => updateFeature(f.id, "confidence", e.target.value as ConfidenceLabel)}
-            className={`w-32 px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              missingConfidence ? 'border-red-500' : 'border-gray-300'
-            }`}
-            aria-invalid={missingConfidence ? true : undefined}
-            aria-describedby={missingConfidence ? confHelpId : undefined}
-          >
-            <option value="">Select</option>
-            {confidenceOptions.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-          {missingConfidence && (
-            <div id={confHelpId} className="text-red-500 text-xs mt-1">
-              Confidence is required
-            </div>
-          )}
-        </td>
-        <td className="p-2 text-right" title="Effort T-shirt sizes mapping">
-          <select
-            aria-label="Effort"
-            value={(f.effort as string) ?? ""}
-            onChange={(e) => updateFeature(f.id, "effort", e.target.value as EffortSize)}
-            className={`w-24 px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              missingEffort ? 'border-red-500' : 'border-gray-300'
-            }`}
-            aria-invalid={missingEffort ? true : undefined}
-            aria-describedby={missingEffort ? effortHelpId : undefined}
-          >
-            <option value="">Select</option>
-            {effortOptions.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-          {missingEffort && (
-            <div id={effortHelpId} className="text-red-500 text-xs mt-1">
-              Effort is required
-            </div>
-          )}
-        </td>
-        <td className="p-2 text-right tabular-nums">{scoreDisplay}</td>
-        <td className="p-2 text-center">
-          <button 
-            onClick={() => deleteFeature(f.id)} 
-            onKeyDown={(e) => handleKeyDown(e, () => deleteFeature(f.id))}
-            aria-label={`Delete feature: ${f.name || "unnamed"}`}
-            title={`Delete ${f.name || "feature"}`}
-            tabIndex={0}
-            className="bg-red-500 hover:bg-red-600 text-white border-none px-3 py-1 rounded cursor-pointer text-sm transition-colors"
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
+        </TableCell>
+        <TableCell align="right">
+          <FormControl size="small" sx={{ width: 140 }} error={missingImpact}>
+            <Select
+              aria-label="Impact"
+              value={(f.impact as string) ?? ""}
+              onChange={(e) => updateFeature(f.id, "impact", e.target.value as ImpactLabel)}
+              displayEmpty
+              variant="outlined"
+            >
+              <MenuItem value="">Select</MenuItem>
+              {impactOptions.map((opt) => (
+                <MenuItem key={opt} value={opt}>
+                  {opt}
+                </MenuItem>
+              ))}
+            </Select>
+            {missingImpact && (
+              <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>
+                Impact is required
+              </Typography>
+            )}
+          </FormControl>
+        </TableCell>
+        <TableCell align="right">
+          <FormControl size="small" sx={{ width: 120 }} error={missingConfidence}>
+            <Select
+              aria-label="Confidence"
+              value={(f.confidence as string) ?? ""}
+              onChange={(e) => updateFeature(f.id, "confidence", e.target.value as ConfidenceLabel)}
+              displayEmpty
+              variant="outlined"
+            >
+              <MenuItem value="">Select</MenuItem>
+              {confidenceOptions.map((opt) => (
+                <MenuItem key={opt} value={opt}>
+                  {opt}
+                </MenuItem>
+              ))}
+            </Select>
+            {missingConfidence && (
+              <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>
+                Confidence is required
+              </Typography>
+            )}
+          </FormControl>
+        </TableCell>
+        <TableCell align="right">
+          <FormControl size="small" sx={{ width: 100 }} error={missingEffort}>
+            <Select
+              aria-label="Effort"
+              value={(f.effort as string) ?? ""}
+              onChange={(e) => updateFeature(f.id, "effort", e.target.value as EffortSize)}
+              displayEmpty
+              variant="outlined"
+            >
+              <MenuItem value="">Select</MenuItem>
+              {effortOptions.map((opt) => (
+                <MenuItem key={opt} value={opt}>
+                  {opt}
+                </MenuItem>
+              ))}
+            </Select>
+            {missingEffort && (
+              <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>
+                Effort is required
+              </Typography>
+            )}
+          </FormControl>
+        </TableCell>
+        <TableCell align="right" sx={{ fontVariantNumeric: 'tabular-nums' }}>
+          {scoreDisplay}
+        </TableCell>
+        <TableCell align="center">
+          <Tooltip title={`Delete ${f.name || "feature"}`}>
+            <IconButton
+              onClick={() => deleteFeature(f.id)}
+              onKeyDown={(e) => handleKeyDown(e, () => deleteFeature(f.id))}
+              aria-label={`Delete feature: ${f.name || "unnamed"}`}
+              color="error"
+              size="small"
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        </TableCell>
+      </TableRow>
     );
   }, [updateFeature, deleteFeature, handleKeyDown]);
 
   return (
-    <section aria-label="RICE table" className="mt-4">
-      <div className="mb-2 flex gap-2 flex-wrap items-center">
-        <div className="text-gray-600 text-sm">Auto-sorted by RICE score</div>
-      </div>
-      <div className="mb-2 text-gray-700 leading-relaxed text-sm">
-        <div>
+    <Box component="section" aria-label="RICE table" sx={{ mt: 4 }}>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+        Auto-sorted by RICE score
+      </Typography>
+      
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="body2" sx={{ mb: 1 }}>
           <strong>Formula:</strong> (Reach × Impact × Confidence) ÷ Effort
-        </div>
-        <div className="break-words">
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
           <strong>Reach</strong>: customers per quarter. <strong>Impact</strong>: Massive=3, High=2,
           Medium=1, Low=0.5, Minimal=0.25. <strong>Confidence</strong>: 100%=1.0, 80%=0.8, 50%=0.5.
           <strong> Effort</strong>: XS=0.5, S=1, M=2, L=4, XL=8.
-        </div>
-      </div>
-      <div className="overflow-x-auto border border-gray-300 rounded">
-        <table 
-          className="w-full border-collapse min-w-[800px]"
-          role="table"
-          aria-label="RICE prioritization features table"
-        >
-          <thead>
-            <tr role="row">
-              <th className="text-left p-2 bg-gray-100 border-b border-gray-300">Feature</th>
-              <th className="text-right p-2 bg-gray-100 border-b border-gray-300" title="Reach: customers per quarter">
-                Reach / quarter
-              </th>
-              <th className="text-right p-2 bg-gray-100 border-b border-gray-300" title="Impact: Massive=3, High=2, Medium=1, Low=0.5, Minimal=0.25">
-                Impact
-              </th>
-              <th className="text-right p-2 bg-gray-100 border-b border-gray-300" title="Confidence: 100%=1.0, 80%=0.8, 50%=0.5">
-                Confidence
-              </th>
-              <th className="text-right p-2 bg-gray-100 border-b border-gray-300" title="Effort: XS=0.5, S=1, M=2, L=4, XL=8">
-                Effort
-              </th>
-              <th className="text-right p-2 bg-gray-100 border-b border-gray-300">Score</th>
-              <th className="text-center p-2 bg-gray-100 border-b border-gray-300">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+        </Typography>
+      </Box>
+
+      <TableContainer component={Paper} sx={{ mb: 3 }}>
+        <Table aria-label="RICE prioritization features table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Feature</TableCell>
+              <TableCell align="right" title="Reach: customers per quarter">Reach / quarter</TableCell>
+              <TableCell align="right" title="Impact: Massive=3, High=2, Medium=1, Low=0.5, Minimal=0.25">Impact</TableCell>
+              <TableCell align="right" title="Confidence: 100%=1.0, 80%=0.8, 50%=0.5">Confidence</TableCell>
+              <TableCell align="right" title="Effort: XS=0.5, S=1, M=2, L=4, XL=8">Effort</TableCell>
+              <TableCell align="right">Score</TableCell>
+              <TableCell align="center">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {sortedFeatures.length === 0 ? (
-              <tr role="row">
-                <td colSpan={7} className="p-3 text-gray-600 text-center">
+              <TableRow>
+                <TableCell colSpan={7} align="center" sx={{ color: 'text.secondary' }}>
                   No features yet. Click "Add feature" to get started.
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ) : (
               sortedFeatures.map((f) => renderRow(f))
             )}
-          </tbody>
-        </table>
-      </div>
-      <div className="mt-4 flex justify-center">
-        <button 
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
           onClick={addFeature}
           onKeyDown={(e) => handleKeyDown(e, addFeature)}
           aria-label="Add new feature to the table"
-          tabIndex={0}
-          className="bg-green-500 hover:bg-green-600 text-white border-none px-6 py-3 rounded-md cursor-pointer text-base font-medium transition-colors"
+          sx={{ 
+            bgcolor: 'success.main',
+            '&:hover': { bgcolor: 'success.dark' }
+          }}
         >
-          + Add Feature
-        </button>
-      </div>
-    </section>
+          Add Feature
+        </Button>
+      </Box>
+    </Box>
   );
 });
 
