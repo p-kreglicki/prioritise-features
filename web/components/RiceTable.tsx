@@ -19,7 +19,7 @@ import {
   IconButton,
   Tooltip
 } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { AddCircleTwoTone as AddIcon, DeleteForeverTwoTone as DeleteIcon } from '@mui/icons-material';
 import {
   DEFAULT_RICE_SCALES,
   computeRiceScore,
@@ -293,7 +293,7 @@ const RiceTable = memo(function RiceTable({
               <TableCell align="left" title="Impact: Massive=3, High=2, Medium=1, Low=0.5, Minimal=0.25">Feature Impact</TableCell>
               <TableCell align="left" title="Confidence: 100%=1.0, 80%=0.8, 50%=0.5">Confidence</TableCell>
               <TableCell align="left" title="Effort: XS=0.5, S=1, M=2, L=4, XL=8">Effort</TableCell>
-              <TableCell align="right">Score</TableCell>
+              <TableCell align="right">RICE Score</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
