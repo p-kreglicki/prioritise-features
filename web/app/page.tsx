@@ -1,8 +1,8 @@
 "use client";
 
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { Container, Typography, Box, Button } from '@mui/material';
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { Container, Typography, Box, Button } from "@mui/material";
 import RiceTable from "@/components/RiceTable";
 import ImportExportMenu from "@/components/ImportExportMenu";
 import { useState, useEffect } from "react";
@@ -15,10 +15,10 @@ function generateId(): string {
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: "#1976d2",
     },
     secondary: {
-      main: '#dc004e',
+      main: "#dc004e",
     },
   },
 });
@@ -35,7 +35,7 @@ export default function Page() {
         name: "",
         description: "",
         createdAtIso: nowIso,
-        updatedAtIso: nowIso
+        updatedAtIso: nowIso,
       };
       setFeatures([defaultFeature]);
     }
@@ -49,10 +49,10 @@ export default function Page() {
           RICE Prioritization App
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Prioritize features using the RICE framework: (Reach × Impact × Confidence) ÷ Effort
+          Prioritize features using the RICE framework
         </Typography>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 3, flexWrap: 'wrap' }}>
-          <ImportExportMenu 
+        <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 3, flexWrap: "wrap" }}>
+          <ImportExportMenu
             features={features}
             onImport={(imported, mode) => {
               setFeatures((prev) => (mode === "replace" ? imported : prev.concat(imported)));
@@ -64,5 +64,3 @@ export default function Page() {
     </ThemeProvider>
   );
 }
-
-

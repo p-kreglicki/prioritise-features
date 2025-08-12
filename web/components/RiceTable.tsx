@@ -138,16 +138,16 @@ const RiceTable = memo(function RiceTable({
       <TableRow key={f.id}>
         <TableCell>
           <TextField
-            aria-label="Feature name"
+            aria-label="Feature Name"
             value={f.name}
             onChange={(e) => updateFeature(f.id, "name", e.target.value)}
-            placeholder="Feature name"
+            placeholder="Feature Name"
             size="small"
             fullWidth
             variant="outlined"
           />
         </TableCell>
-        <TableCell align="right">
+        <TableCell align="left">
           <TextField
             aria-label="Reach per quarter"
             type="number"
@@ -165,7 +165,7 @@ const RiceTable = memo(function RiceTable({
             variant="outlined"
           />
         </TableCell>
-        <TableCell align="right">
+        <TableCell align="left">
           <FormControl size="small" sx={{ width: 140 }} error={missingImpact}>
             <Select
               aria-label="Impact"
@@ -188,7 +188,7 @@ const RiceTable = memo(function RiceTable({
             )}
           </FormControl>
         </TableCell>
-        <TableCell align="right">
+        <TableCell align="left">
           <FormControl size="small" sx={{ width: 120 }} error={missingConfidence}>
             <Select
               aria-label="Confidence"
@@ -211,8 +211,8 @@ const RiceTable = memo(function RiceTable({
             )}
           </FormControl>
         </TableCell>
-        <TableCell align="right">
-          <FormControl size="small" sx={{ width: 100 }} error={missingEffort}>
+        <TableCell align="left">
+          <FormControl size="small" sx={{ width: 120 }} error={missingEffort}>
             <Select
               aria-label="Effort"
               value={(f.effort as string) ?? ""}
@@ -286,11 +286,11 @@ const RiceTable = memo(function RiceTable({
         <Table aria-label="RICE prioritization features table">
           <TableHead>
             <TableRow>
-              <TableCell>Feature</TableCell>
-              <TableCell align="right" title="Reach: customers per quarter">Reach / quarter</TableCell>
-              <TableCell align="right" title="Impact: Massive=3, High=2, Medium=1, Low=0.5, Minimal=0.25">Impact</TableCell>
-              <TableCell align="right" title="Confidence: 100%=1.0, 80%=0.8, 50%=0.5">Confidence</TableCell>
-              <TableCell align="right" title="Effort: XS=0.5, S=1, M=2, L=4, XL=8">Effort</TableCell>
+              <TableCell>Feature Name</TableCell>
+              <TableCell align="left" title="Reach: customers per quarter">Reach (customers per quarter)</TableCell>
+              <TableCell align="left" title="Impact: Massive=3, High=2, Medium=1, Low=0.5, Minimal=0.25">Feature Impact</TableCell>
+              <TableCell align="left" title="Confidence: 100%=1.0, 80%=0.8, 50%=0.5">Confidence</TableCell>
+              <TableCell align="left" title="Effort: XS=0.5, S=1, M=2, L=4, XL=8">Effort</TableCell>
               <TableCell align="right">Score</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
