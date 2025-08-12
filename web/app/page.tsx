@@ -49,7 +49,7 @@ export default function Page() {
           RICE Prioritization App
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Prioritize features using the RICE framework
+          Prioritize features using the RICE framework.
         </Typography>
         <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 3, flexWrap: "wrap" }}>
           <ImportExportMenu

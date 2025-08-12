@@ -301,7 +301,7 @@ const RiceTable = memo(function RiceTable({
           disabled={features.length === 0}
           size="small"
         >
-          Clear Data
+          Clear All
         </Button>
       </Box>
 
