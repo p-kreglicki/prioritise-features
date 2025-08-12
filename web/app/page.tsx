@@ -48,8 +48,8 @@ export default function Page() {
         <Typography variant="h4" component="h1" gutterBottom>
           RICE Prioritization App
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Prioritize features using the RICE framework.
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+          This app helps you determine the most valuable features to build based on their potential impact and effort using the RICE (Reach, Impact, Confidence, Effort) framework. It calculates a RICE score for each feature and auto-sorts them in descending order of their score.
         </Typography>
         <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 3, flexWrap: "wrap" }}>
           <ImportExportMenu

@@ -291,9 +291,6 @@ const RiceTable = memo(function RiceTable({
   return (
     <Box component="section" aria-label="RICE table" sx={{ mt: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="body2" color="text.secondary">
-          Auto-sorted by RICE score
-        </Typography>
         <Button
           variant="outlined"
           color="error"
@@ -319,17 +316,6 @@ const RiceTable = memo(function RiceTable({
           </ul>
         </Alert>
       )}
-      
-      <Box sx={{ mb: 2 }}>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          <strong>Formula:</strong> (Reach × Impact × Confidence) ÷ Effort
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          <strong>Reach</strong>: customers per quarter. <strong>Impact</strong>: Massive=3, High=2,
-          Medium=1, Low=0.5, Minimal=0.25. <strong>Confidence</strong>: 100%=1.0, 80%=0.8, 50%=0.5.
-          <strong> Effort</strong>: XS=0.5, S=1, M=2, L=4, XL=8.
-        </Typography>
-      </Box>
 
       <TableContainer component={Paper} sx={{ mb: 3 }}>
         <Table aria-label="RICE prioritization features table">
