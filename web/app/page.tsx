@@ -26,18 +26,27 @@ const theme = createTheme({
 export default function Page() {
   const [features, setFeatures] = useState<Feature[]>([]);
 
-  // Add a default feature row on startup if no features exist
+  // Add 2 default feature rows on startup if no features exist
   useEffect(() => {
     if (features.length === 0) {
       const nowIso = new Date().toISOString();
-      const defaultFeature: Feature = {
-        id: generateId(),
-        name: "",
-        description: "",
-        createdAtIso: nowIso,
-        updatedAtIso: nowIso,
-      };
-      setFeatures([defaultFeature]);
+      const defaultFeatures: Feature[] = [
+        {
+          id: generateId(),
+          name: "",
+          description: "",
+          createdAtIso: nowIso,
+          updatedAtIso: nowIso,
+        },
+        {
+          id: generateId(),
+          name: "",
+          description: "",
+          createdAtIso: nowIso,
+          updatedAtIso: nowIso,
+        }
+      ];
+      setFeatures(defaultFeatures);
     }
   }, [features.length]);
 

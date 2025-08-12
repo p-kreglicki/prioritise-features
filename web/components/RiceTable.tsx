@@ -66,7 +66,8 @@ const RiceTable = memo(function RiceTable({
 
     features.forEach((f) => {
       const invalidReach = f.reach !== undefined && (!Number.isFinite(f.reach) || (f.reach as number) < 0);
-      const reachTouchedAndEmpty = f.reach === undefined && f.name !== "";
+      const hasAnyContent = f.name !== "" || f.description !== "" || f.impact !== "" || f.confidence !== "" || f.effort !== "";
+      const reachTouchedAndEmpty = f.reach === undefined && hasAnyContent;
       const impactTouchedAndEmpty = f.impact === "" && f.name !== "";
       const confidenceTouchedAndEmpty = f.confidence === "" && f.name !== "";
       const effortTouchedAndEmpty = f.effort === "" && f.name !== "";
@@ -178,7 +179,9 @@ const RiceTable = memo(function RiceTable({
     const invalidReach = f.reach !== undefined && (!Number.isFinite(f.reach) || (f.reach as number) < 0);
     
     // Check if field was touched and then left empty/invalid
-    const reachTouchedAndEmpty = f.reach === undefined && f.name !== ""; // Show error only if feature has other content
+    // For reach, only show error if there's some interaction (name filled OR reach was previously set)
+    const hasAnyContent = f.name !== "" || f.description !== "" || f.impact !== "" || f.confidence !== "" || f.effort !== "";
+    const reachTouchedAndEmpty = f.reach === undefined && hasAnyContent;
     const impactTouchedAndEmpty = f.impact === "" && f.name !== ""; // User selected then reverted to "Select"
     const confidenceTouchedAndEmpty = f.confidence === "" && f.name !== "";
     const effortTouchedAndEmpty = f.effort === "" && f.name !== "";
