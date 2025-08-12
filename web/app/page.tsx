@@ -4,8 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container, Typography, Box, Button } from '@mui/material';
 import RiceTable from "@/components/RiceTable";
-import ImportDialog from "@/components/ImportDialog";
-import ExportMenu from "@/components/ExportMenu";
+import ImportExportMenu from "@/components/ImportExportMenu";
 import { useState, useEffect } from "react";
 import type { Feature } from "@/lib/rice";
 
@@ -53,19 +52,12 @@ export default function Page() {
           Prioritize features using the RICE framework: (Reach × Impact × Confidence) ÷ Effort
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 3, flexWrap: 'wrap' }}>
-          <ImportDialog
-            onApply={(imported, mode) => {
+          <ImportExportMenu 
+            features={features}
+            onImport={(imported, mode) => {
               setFeatures((prev) => (mode === "replace" ? imported : prev.concat(imported)));
             }}
           />
-          <ExportMenu features={features} />
-          <Button 
-            variant="contained" 
-            color="error"
-            onClick={() => setFeatures([])}
-          >
-            Clear data
-          </Button>
         </Box>
         <RiceTable features={features} onChangeFeatures={setFeatures} />
       </Container>

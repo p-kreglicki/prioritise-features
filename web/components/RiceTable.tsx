@@ -256,9 +256,20 @@ const RiceTable = memo(function RiceTable({
 
   return (
     <Box component="section" aria-label="RICE table" sx={{ mt: 4 }}>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        Auto-sorted by RICE score
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="body2" color="text.secondary">
+          Auto-sorted by RICE score
+        </Typography>
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={() => applyUpdate(() => [])}
+          disabled={features.length === 0}
+          size="small"
+        >
+          Clear Data
+        </Button>
+      </Box>
       
       <Box sx={{ mb: 2 }}>
         <Typography variant="body2" sx={{ mb: 1 }}>
