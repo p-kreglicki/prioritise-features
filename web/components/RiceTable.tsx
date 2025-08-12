@@ -21,6 +21,7 @@ import {
   Alert
 } from '@mui/material';
 import { AddCircleTwoTone as AddIcon, DeleteForeverTwoTone as DeleteIcon, HelpTwoTone as HelpIcon } from '@mui/icons-material';
+import ImportExportMenu from './ImportExportMenu';
 import {
   DEFAULT_RICE_SCALES,
   computeRiceScore,
@@ -291,6 +292,12 @@ const RiceTable = memo(function RiceTable({
   return (
     <Box component="section" aria-label="RICE table" sx={{ mt: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <ImportExportMenu
+          features={features}
+          onImport={(imported, mode) => {
+            applyUpdate(() => (mode === "replace" ? imported : features.concat(imported)));
+          }}
+        />
         <Button
           variant="outlined"
           color="error"
