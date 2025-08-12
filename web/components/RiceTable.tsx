@@ -20,7 +20,7 @@ import {
   Tooltip,
   Alert
 } from '@mui/material';
-import { AddCircleTwoTone as AddIcon, DeleteForeverTwoTone as DeleteIcon } from '@mui/icons-material';
+import { AddCircleTwoTone as AddIcon, DeleteForeverTwoTone as DeleteIcon, HelpTwoTone as HelpIcon } from '@mui/icons-material';
 import {
   DEFAULT_RICE_SCALES,
   computeRiceScore,
@@ -336,10 +336,38 @@ const RiceTable = memo(function RiceTable({
           <TableHead>
             <TableRow>
               <TableCell>Feature Name</TableCell>
-              <TableCell align="left" title="Reach: customers per quarter">Reach (customers per quarter)</TableCell>
-              <TableCell align="left" title="Impact: Massive=3, High=2, Medium=1, Low=0.5, Minimal=0.25">Feature Impact</TableCell>
-              <TableCell align="left" title="Confidence: 100%=1.0, 80%=0.8, 50%=0.5">Confidence</TableCell>
-              <TableCell align="left" title="Effort: XS=0.5, S=1, M=2, L=4, XL=8">Effort</TableCell>
+              <TableCell align="left">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  Reach (customers per quarter)
+                  <Tooltip title="The number of customers this feature will reach in a given quarter. This represents the scale of potential impact - how many people will use or benefit from this feature.">
+                    <HelpIcon fontSize="small" color="action" />
+                  </Tooltip>
+                </Box>
+              </TableCell>
+              <TableCell align="left">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  Feature Impact
+                  <Tooltip title="How much this feature will impact each customer. Massive=3 (game-changing), High=2 (significant improvement), Medium=1 (moderate improvement), Low=0.5 (minor improvement), Minimal=0.25 (barely noticeable).">
+                    <HelpIcon fontSize="small" color="action" />
+                  </Tooltip>
+                </Box>
+              </TableCell>
+              <TableCell align="left">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  Confidence
+                  <Tooltip title="How confident you are in your estimates for reach and impact. 100% = completely certain, 80% = confident but some uncertainty, 50% = uncertain or experimental.">
+                    <HelpIcon fontSize="small" color="action" />
+                  </Tooltip>
+                </Box>
+              </TableCell>
+              <TableCell align="left">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  Effort
+                  <Tooltip title="The amount of work required to implement this feature. XS=0.5 (very quick), S=1 (small task), M=2 (medium project), L=4 (large project), XL=8 (very large project).">
+                    <HelpIcon fontSize="small" color="action" />
+                  </Tooltip>
+                </Box>
+              </TableCell>
               <TableCell align="right">RICE Score</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
