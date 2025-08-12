@@ -128,10 +128,12 @@ const RiceTable = memo(function RiceTable({
     const score = computeRiceScore(f, DEFAULT_RICE_SCALES);
     const scoreDisplay = score == null ? "" : (Math.round(score * 100) / 100).toFixed(2);
     const invalidReach = f.reach !== undefined && (!Number.isFinite(f.reach) || (f.reach as number) < 0);
-    const missingReach = f.reach === undefined;
-    const missingImpact = !f.impact;
-    const missingConfidence = !f.confidence;
-    const missingEffort = !f.effort;
+    
+    // Check if field was touched and then left empty/invalid
+    const reachTouchedAndEmpty = f.reach === undefined && f.name !== ""; // Show error only if feature has other content
+    const impactTouchedAndEmpty = f.impact === "" && f.name !== ""; // User selected then reverted to "Select"
+    const confidenceTouchedAndEmpty = f.confidence === "" && f.name !== "";
+    const effortTouchedAndEmpty = f.effort === "" && f.name !== "";
 
 
     return (
@@ -159,14 +161,14 @@ const RiceTable = memo(function RiceTable({
               updateFeature(f.id, "reach", (Number.isFinite(num as number) ? (num as number) : undefined) as any);
             }}
             error={invalidReach}
-            helperText={invalidReach ? "Reach must be a non-negative number" : missingReach ? "Reach is required" : ""}
+            helperText={invalidReach ? "Reach must be a non-negative number" : reachTouchedAndEmpty ? "Reach is required" : ""}
             size="small"
             sx={{ width: 120 }}
             variant="outlined"
           />
         </TableCell>
         <TableCell align="left">
-          <FormControl size="small" sx={{ width: 140 }} error={missingImpact}>
+          <FormControl size="small" sx={{ width: 140 }} error={impactTouchedAndEmpty}>
             <Select
               aria-label="Impact"
               value={(f.impact as string) ?? ""}
@@ -181,7 +183,7 @@ const RiceTable = memo(function RiceTable({
                 </MenuItem>
               ))}
             </Select>
-            {missingImpact && (
+            {impactTouchedAndEmpty && (
               <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>
                 Impact is required
               </Typography>
@@ -189,7 +191,7 @@ const RiceTable = memo(function RiceTable({
           </FormControl>
         </TableCell>
         <TableCell align="left">
-          <FormControl size="small" sx={{ width: 120 }} error={missingConfidence}>
+          <FormControl size="small" sx={{ width: 120 }} error={confidenceTouchedAndEmpty}>
             <Select
               aria-label="Confidence"
               value={(f.confidence as string) ?? ""}
@@ -204,7 +206,7 @@ const RiceTable = memo(function RiceTable({
                 </MenuItem>
               ))}
             </Select>
-            {missingConfidence && (
+            {confidenceTouchedAndEmpty && (
               <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>
                 Confidence is required
               </Typography>
@@ -212,7 +214,7 @@ const RiceTable = memo(function RiceTable({
           </FormControl>
         </TableCell>
         <TableCell align="left">
-          <FormControl size="small" sx={{ width: 120 }} error={missingEffort}>
+          <FormControl size="small" sx={{ width: 120 }} error={effortTouchedAndEmpty}>
             <Select
               aria-label="Effort"
               value={(f.effort as string) ?? ""}
@@ -227,7 +229,7 @@ const RiceTable = memo(function RiceTable({
                 </MenuItem>
               ))}
             </Select>
-            {missingEffort && (
+            {effortTouchedAndEmpty && (
               <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>
                 Effort is required
               </Typography>
