@@ -332,7 +332,7 @@ const RiceTable = memo(function RiceTable({
               <TableCell align="left">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   Reach (customers per quarter)
-                  <Tooltip title="The number of customers this feature will reach in a given quarter. This represents the scale of potential impact - how many people will use or benefit from this feature.">
+                  <Tooltip title="The number of customers this feature will reach in a given quarter. This represents the scale of potential impact - how many people will use or benefit from this feature." placement="top">
                     <HelpIcon fontSize="small" color="action" />
                   </Tooltip>
                 </Box>
@@ -340,7 +340,7 @@ const RiceTable = memo(function RiceTable({
               <TableCell align="left">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   Feature Impact
-                  <Tooltip title="How much this feature will impact each customer. Massive=3 (game-changing), High=2 (significant improvement), Medium=1 (moderate improvement), Low=0.5 (minor improvement), Minimal=0.25 (barely noticeable).">
+                  <Tooltip title="How much this feature will impact each customer. Massive=3 (game-changing), High=2 (significant improvement), Medium=1 (moderate improvement), Low=0.5 (minor improvement), Minimal=0.25 (barely noticeable)." placement="top">
                     <HelpIcon fontSize="small" color="action" />
                   </Tooltip>
                 </Box>
@@ -348,7 +348,7 @@ const RiceTable = memo(function RiceTable({
               <TableCell align="left">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   Confidence
-                  <Tooltip title="How confident you are in your estimates for reach and impact. 100% = completely certain, 80% = confident but some uncertainty, 50% = uncertain or experimental.">
+                  <Tooltip title="How confident you are in your estimates for reach and impact. 100% = completely certain, 80% = confident but some uncertainty, 50% = uncertain or experimental." placement="top">
                     <HelpIcon fontSize="small" color="action" />
                   </Tooltip>
                 </Box>
@@ -356,7 +356,7 @@ const RiceTable = memo(function RiceTable({
               <TableCell align="left">
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   Effort
-                  <Tooltip title="The amount of work required to implement this feature. XS=0.5 (very quick), S=1 (small task), M=2 (medium project), L=4 (large project), XL=8 (very large project).">
+                  <Tooltip title="The amount of work required to implement this feature. XS=0.5 (very quick), S=1 (small task), M=2 (medium project), L=4 (large project), XL=8 (very large project)." placement="top">
                     <HelpIcon fontSize="small" color="action" />
                   </Tooltip>
                 </Box>
