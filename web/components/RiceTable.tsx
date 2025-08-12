@@ -17,7 +17,8 @@ import {
   Typography,
   Box,
   IconButton,
-  Tooltip
+  Tooltip,
+  Alert
 } from '@mui/material';
 import { AddCircleTwoTone as AddIcon, DeleteForeverTwoTone as DeleteIcon } from '@mui/icons-material';
 import {
@@ -56,6 +57,52 @@ const RiceTable = memo(function RiceTable({
 
   const sortedFeatures = useMemo(() => {
     return features.slice().sort((a, b) => compareByRice(a, b));
+  }, [features]);
+
+  const getConsolidatedErrors = useCallback(() => {
+    const errors: string[] = [];
+    let hasErrors = false;
+
+    features.forEach((f) => {
+      const invalidReach = f.reach !== undefined && (!Number.isFinite(f.reach) || (f.reach as number) < 0);
+      const reachTouchedAndEmpty = f.reach === undefined && f.name !== "";
+      const impactTouchedAndEmpty = f.impact === "" && f.name !== "";
+      const confidenceTouchedAndEmpty = f.confidence === "" && f.name !== "";
+      const effortTouchedAndEmpty = f.effort === "" && f.name !== "";
+
+      if (invalidReach) {
+        hasErrors = true;
+        if (!errors.includes("Some features have invalid reach values (must be non-negative numbers)")) {
+          errors.push("Some features have invalid reach values (must be non-negative numbers)");
+        }
+      }
+      if (reachTouchedAndEmpty) {
+        hasErrors = true;
+        if (!errors.includes("Some features are missing reach values")) {
+          errors.push("Some features are missing reach values");
+        }
+      }
+      if (impactTouchedAndEmpty) {
+        hasErrors = true;
+        if (!errors.includes("Some features are missing impact values")) {
+          errors.push("Some features are missing impact values");
+        }
+      }
+      if (confidenceTouchedAndEmpty) {
+        hasErrors = true;
+        if (!errors.includes("Some features are missing confidence values")) {
+          errors.push("Some features are missing confidence values");
+        }
+      }
+      if (effortTouchedAndEmpty) {
+        hasErrors = true;
+        if (!errors.includes("Some features are missing effort values")) {
+          errors.push("Some features are missing effort values");
+        }
+      }
+    });
+
+    return { hasErrors, errors };
   }, [features]);
 
   const applyUpdate = useCallback(
@@ -135,7 +182,6 @@ const RiceTable = memo(function RiceTable({
     const confidenceTouchedAndEmpty = f.confidence === "" && f.name !== "";
     const effortTouchedAndEmpty = f.effort === "" && f.name !== "";
 
-
     return (
       <TableRow key={f.id}>
         <TableCell>
@@ -160,8 +206,7 @@ const RiceTable = memo(function RiceTable({
               const num = v === "" ? undefined : Number(v);
               updateFeature(f.id, "reach", (Number.isFinite(num as number) ? (num as number) : undefined) as any);
             }}
-            error={invalidReach}
-            helperText={invalidReach ? "Reach must be a non-negative number" : reachTouchedAndEmpty ? "Reach is required" : ""}
+            error={invalidReach || reachTouchedAndEmpty}
             size="small"
             sx={{ width: 120 }}
             variant="outlined"
@@ -183,11 +228,6 @@ const RiceTable = memo(function RiceTable({
                 </MenuItem>
               ))}
             </Select>
-            {impactTouchedAndEmpty && (
-              <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>
-                Impact is required
-              </Typography>
-            )}
           </FormControl>
         </TableCell>
         <TableCell align="left">
@@ -206,11 +246,6 @@ const RiceTable = memo(function RiceTable({
                 </MenuItem>
               ))}
             </Select>
-            {confidenceTouchedAndEmpty && (
-              <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>
-                Confidence is required
-              </Typography>
-            )}
           </FormControl>
         </TableCell>
         <TableCell align="left">
@@ -229,11 +264,6 @@ const RiceTable = memo(function RiceTable({
                 </MenuItem>
               ))}
             </Select>
-            {effortTouchedAndEmpty && (
-              <Typography variant="caption" color="error" sx={{ mt: 0.5 }}>
-                Effort is required
-              </Typography>
-            )}
           </FormControl>
         </TableCell>
         <TableCell align="right" sx={{ fontVariantNumeric: 'tabular-nums' }}>
@@ -256,6 +286,8 @@ const RiceTable = memo(function RiceTable({
     );
   }, [updateFeature, deleteFeature, handleKeyDown]);
 
+  const { hasErrors, errors } = getConsolidatedErrors();
+
   return (
     <Box component="section" aria-label="RICE table" sx={{ mt: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -272,6 +304,21 @@ const RiceTable = memo(function RiceTable({
           Clear Data
         </Button>
       </Box>
+
+      {hasErrors && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          <Typography variant="body2" component="div">
+            Please fix the following issues:
+          </Typography>
+          <ul style={{ margin: '4px 0', paddingLeft: '16px' }}>
+            {errors.map((error, index) => (
+              <li key={index}>
+                <Typography variant="body2">{error}</Typography>
+              </li>
+            ))}
+          </ul>
+        </Alert>
+      )}
       
       <Box sx={{ mb: 2 }}>
         <Typography variant="body2" sx={{ mb: 1 }}>
